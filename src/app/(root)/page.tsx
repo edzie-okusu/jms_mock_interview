@@ -2,10 +2,22 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { dummyInterviews } from "../../../constants";
 import InterviewCard from "../../../components/InterviewCard";
+import { getCurrentUser, getInterviewByUserId, getLatestInterviews } from "../../../lib/actions/auth.actions";
 
-const Page = () => {
+const  Page = async () => {
+  const user = await getCurrentUser();
+
+  // Promise.all() allows for data to be fetched concurrently or parrallely
+  const [userInterviews, latestInterviews] = await Promise.all([
+    await getInterviewByUserId(user?.id),
+    await getLatestInterviews({userId: user?.id})
+  ]) 
+
+  const hasPastInterview = userInterviews?.length > 0;
+  const hasLatestInterviews = latestInterviews?.length > 0;
+
+
   return (
     <>
       <section className="card-cta">
@@ -31,9 +43,14 @@ const Page = () => {
         <h2>Your Interviews</h2>
 
         <div className="interviews-section">
-          {dummyInterviews.map((interview)=>(
-            <InterviewCard {...interview} key={interview.id}/>
-          ))}
+          {
+            hasPastInterview ? (
+              userInterviews?.map((interview)=>(
+                <InterviewCard {...interview} key={interview.id}/>
+              ))) : (
+                <p>You have not taken any interviews yet</p>
+              )
+          }
         </div>
       </section>
 
@@ -41,9 +58,14 @@ const Page = () => {
         <h2>Take an Interview</h2>
 
         <div className="interviews-section">
-           {dummyInterviews.map((interview)=>(
-            <InterviewCard {...interview} key={interview.id} />
-          ))}
+           {
+            hasLatestInterviews ? (
+              latestInterviews?.map((interview)=>(
+                <InterviewCard {...interview} key={interview.id}/>
+              ))) : (
+                <p>You have not taken any interviews yet</p>
+              )
+          }
         </div>
       </section>
     </>
