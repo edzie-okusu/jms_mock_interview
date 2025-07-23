@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { cn } from '../lib/utils';
 ;
 import { vapi } from '../lib/vapi.sdk';
-import { interviewer } from '../constants';
+import { interviewer, generator } from '../constants';
 import { createFeedback } from '../lib/actions/general.actions';
 import { useRouter } from 'next/navigation';
 
@@ -94,26 +94,37 @@ const Agent = ({userName, userId, type, interviewId, questions}: AgentProps) => 
         } 
     }, [messages, callStatus, type, userId]);
 
-    const handleCall = async() => {
+   const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING);
 
-        if(type === 'generate') {
-                await vapi.start(process.env.NEXT_PUBLIC_VAPI_AI_WORKFLOW_ID!, {
-                variableValues: {
-                    username: userName,
-                    userid: userId,
-                }
-            })
+        if (type === "generate") {
+        await vapi.start(
+            undefined,
+            undefined,
+            undefined,
+            process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,
+            {
+            variableValues: {
+                username: userName,
+                userid: userId,
+            },
+            }
+        );
         } else {
-            let formattedQuestions = questions?.map((question) => `-${question}`).join('\n')
-            await vapi.start(interviewer, {
-                variableValues: {
-                    questions: formattedQuestions
-                }
-            }) 
+        let formattedQuestions = "";
+        if (questions) {
+            formattedQuestions = questions
+            .map((question) => `- ${question}`)
+            .join("\n");
         }
-        
-    }
+
+        await vapi.start(interviewer, {
+            variableValues: {
+            questions: formattedQuestions,
+            },
+        });
+        }
+    };
     const handleCallDisconnect = async () => {
         setCallStatus(CallStatus.FINISHED);
 
