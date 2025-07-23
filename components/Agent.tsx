@@ -1,11 +1,13 @@
 'use client'
+
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { cn } from '../lib/utils';
-import { useRouter } from 'next/router';
+;
 import { vapi } from '../lib/vapi.sdk';
 import { interviewer } from '../constants';
 import { createFeedback } from '../lib/actions/general.actions';
+import { useRouter } from 'next/navigation';
 
 enum CallStatus {
     INACTIVE = 'INACTIVE',
@@ -20,7 +22,7 @@ interface SavedMessage {
 }
 
 const Agent = ({userName, userId, type, interviewId, questions}: AgentProps) => {
-     const router = useRouter()
+     const router = useRouter();
      const [isSpeaking, setIsSpeaking]= useState(false);
      const [callStatus, setCallStatus] =  useState<CallStatus>(CallStatus.INACTIVE)
 

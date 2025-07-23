@@ -1,3 +1,4 @@
+'use server'
 import { generateObject } from "ai";
 import { auth, db } from "../../firebase/admin";
 import { google } from "@ai-sdk/google";
