@@ -1,14 +1,26 @@
 import {generateText} from 'ai'
-import {google} from '@ai-sdk/google'
+import {google, createGoogleGenerativeAI} from '@ai-sdk/google'
 import { getRandomInterviewCover } from '../../../../../lib/utils';
 import { db } from '../../../../../firebase/admin';
 
 export async function POST(request: Request) {
   const { type, role, level, techstack, amount, userid } = await request.json();
+  const data = await request.json();
+
 
   try {
+    console.log(data)
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    if (!geminiApiKey) {
+      throw new Error("GEMINI_API_KEY is not set in environment variables.");
+    }
+    const google = createGoogleGenerativeAI({
+      apiKey:geminiApiKey
+    })
+    
+
     const { text: questions } = await generateText({
-      model: google("gemini-2.0-flash-001"),
+      model: google("gemini-2.0-flash-001"), 
       prompt: `Prepare questions for a job interview.
         The job role is ${role}.
         The job experience level is ${level}.

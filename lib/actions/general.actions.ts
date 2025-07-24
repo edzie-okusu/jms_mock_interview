@@ -5,10 +5,7 @@ import { google } from "@ai-sdk/google";
 import { feedbackSchema } from "../../constants";
 // for this line of code, will get an error requireing me to authenticate and create the indeces on firestore 
 export async function getInterviewByUserId(userId: string): Promise<Interview[] | null> {
-  const interviews = await db.collection('interviews')
-    .where('userId', '==', userId)
-    .orderBy('createdAt', 'desc')
-    .get();
+  const interviews = await db.collection('interviews').where('userId', '==', userId).orderBy('createdAt', 'desc').get();
 
   return interviews.docs.map((doc) => ({
     id: doc.id,
@@ -19,12 +16,7 @@ export async function getInterviewByUserId(userId: string): Promise<Interview[] 
 export async function getLatestInterviews(params: GetLatestInterviewsParams): Promise<Interview[] | null> {
   const {userId, limit=20} = params;
 
-  const interviews = await db.collection('interviews')
-    .orderBy('createdAt', 'desc')
-    .where('finalized', '==', true)
-    .where('userId', '!=', userId)
-    .limit(limit)
-    .get();
+  const interviews = await db.collection('interviews').orderBy('createdAt', 'desc').where('finalized', '==', true).where('userId', '!=', userId).limit(limit).get();
 
   return interviews.docs.map((doc) => ({
     id: doc.id,
@@ -33,10 +25,7 @@ export async function getLatestInterviews(params: GetLatestInterviewsParams): Pr
 }
 
 export async function getInterviewById(id: string): Promise<Interview | null> {
-  const interview = await db
-    .collection('interviews')
-    .doc(id)
-    .get()
+  const interview = await db.collection('interviews').doc(id).get()
   return interview.data() as Interview | null;
 }
 
