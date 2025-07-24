@@ -6,6 +6,7 @@ import { cn } from '../lib/utils';
 ;
 import { vapi } from '../lib/vapi.sdk';
 import { interviewer, generator } from '../constants';
+import {google, createGoogleGenerativeAI} from '@ai-sdk/google'
 import { createFeedback } from '../lib/actions/general.actions';
 import { useRouter } from 'next/navigation';
 
@@ -22,6 +23,10 @@ interface SavedMessage {
 }
 
 const Agent = ({userName, userId, type, interviewId, questions}: AgentProps) => {
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const google = createGoogleGenerativeAI({
+      apiKey:geminiApiKey
+    })
      const router = useRouter();
      const [isSpeaking, setIsSpeaking]= useState(false);
      const [callStatus, setCallStatus] =  useState<CallStatus>(CallStatus.INACTIVE)

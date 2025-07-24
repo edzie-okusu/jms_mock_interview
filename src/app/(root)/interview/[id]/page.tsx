@@ -41,7 +41,7 @@ const Page = async ({params}: RouteParams) => {
             userName={user?.name || ''}
             userId={user?.id}
             interviewId={id}
-            type="generate"
+            type="interview"
             questions={interview.questions}
 
         />
