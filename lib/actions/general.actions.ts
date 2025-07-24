@@ -1,7 +1,7 @@
 'use server'
 import { generateObject } from "ai";
 import { auth, db } from "../../firebase/admin";
-import { google } from "@ai-sdk/google";
+import {google, createGoogleGenerativeAI} from '@ai-sdk/google'
 import { feedbackSchema } from "../../constants";
 // for this line of code, will get an error requireing me to authenticate and create the indeces on firestore 
 export async function getInterviewByUserId(userId: string): Promise<Interview[] | null> {
@@ -31,6 +31,11 @@ export async function getInterviewById(id: string): Promise<Interview | null> {
 
 export async function createFeedback(params:CreateFeedbackParams) {
     const {interviewId, userId, transcript} = params
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+        const google = createGoogleGenerativeAI({
+          apiKey:geminiApiKey
+        })
+
 
     try {
         const formattedTranscript = transcript.map((sentence: {role: string; content: string}) => (

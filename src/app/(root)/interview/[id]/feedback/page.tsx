@@ -4,6 +4,7 @@ import { getFeedbackByInterviewsId, getInterviewById } from '../../../../../../l
 import { redirect } from 'next/navigation';
 
 const page = async ({params}: RouteParams) => {
+  
     const {id} = await params;
     const user = await getCurrentUser();
 
