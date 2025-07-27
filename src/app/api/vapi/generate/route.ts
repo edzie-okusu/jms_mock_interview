@@ -4,8 +4,8 @@ import { getRandomInterviewCover } from '../../../../../lib/utils';
 import { db } from '../../../../../firebase/admin';
 
 export async function POST(request: Request) {
-  const { type, role, level, techstack, amount, userid } = await request.json();
   const data = await request.json();
+  const { type, role, level, techstack, amount, userid } = data
 
 
   try {
